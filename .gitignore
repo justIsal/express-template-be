@@ -19,3 +19,4 @@ pnpm-debug.log*
 # IDE / Editor folders
 .vscode
 .idea
+.vercel
