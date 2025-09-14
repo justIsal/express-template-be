@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { loginUser, logoutUser, refreshAccessToken, registerUser } from './auth.service';
+import { findAllUsers, loginUser, logoutUser, refreshAccessToken, registerUser } from './auth.service';
 import { JwtPayload } from 'jsonwebtoken';
 
 export const registerController = async (req: Request, res: Response) => {
@@ -74,4 +74,13 @@ export const getProfileController = async (req: Request, res: Response) => {
     message: 'Profile fetched successfully',
     data: req.user,
   });
+};
+
+export const getAllUsersController = async (req: Request, res: Response) => {
+  try {
+    const users = await findAllUsers();
+    res.status(200).json(users);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
