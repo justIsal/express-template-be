@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
-import { findAllUsers, loginUser, logoutUser, refreshAccessToken, registerUser } from './auth.service';
+import {
+  findAllUsers,
+  loginUser,
+  logoutUser,
+  refreshAccessToken,
+  registerUser,
+} from './auth.service';
 import { JwtPayload } from 'jsonwebtoken';
+import { prisma } from '../../config/prisma';
 
 export const registerController = async (req: Request, res: Response) => {
   try {
@@ -76,11 +83,20 @@ export const getProfileController = async (req: Request, res: Response) => {
   });
 };
 
-export const getAllUsersController = async (req: Request, res: Response) => {
+export const healthCheckController = async (req: Request, res: Response) => {
   try {
-    const users = await findAllUsers();
-    res.status(200).json(users);
-  } catch (error: any) {
-    res.status(500).json({ message: 'Internal Server Error' });
+    await prisma.$connect();
+    res.status(200).json({
+      message: 'Welcome to E-Commerce API!',
+      database_status: 'Connected',
+    });
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    res.status(503).json({
+      message: 'API is running, but could not connect to the database.',
+      database_status: 'Disconnected',
+    });
+  } finally {
+    await prisma.$disconnect();
   }
 };
