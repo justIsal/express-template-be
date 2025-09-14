@@ -2,6 +2,8 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import authRoutes from './api/auth/auth.route';
+import { authMiddleware } from './middlewares/auth.middleware';
+import { getProfileController } from './api/auth/auth.controller';
 
 const app: Express = express();
 
